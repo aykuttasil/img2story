@@ -56,7 +56,7 @@ def text_to_speech(message):
     payloads = {"inputs": message}
 
     response = requests.post(API_URL, headers=headers, json=payloads)
-    with open('audio.mp3', 'wb') as file:
+    with open('output/audio.mp3', 'wb') as file:
         file.write(response.content)
 
 
@@ -70,20 +70,21 @@ def main():
     if uploaded_file is not None:
         print(uploaded_file)
         bytes_data = uploaded_file.read()
-        with open(uploaded_file.name, "wb") as f:
+        with open(f"output/{uploaded_file.name}", "wb") as f:
             f.write(bytes_data)
+            
         st.image(uploaded_file, caption='Uploaded Image.',
                  use_column_width=True)
-        scenario = img2text(uploaded_file.name)
+        scenario = img2text(f"output/{uploaded_file.name}")
         story = generate_story(scenario)
         text_to_speech(story)
 
-        with st.expander("sceneario"):
+        with st.expander("scenario"):
             st.write(scenario)
         with st.expander("story"):
             st.write(story)
 
-        st.audio('audio.mp3', format='audio/mp3')
+        st.audio('output/audio.mp3', format='audio/mp3')
 
 
 if __name__ == "__main__":
